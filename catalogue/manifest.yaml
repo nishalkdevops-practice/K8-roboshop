@@ -17,7 +17,7 @@ spec:
       project: roboshop
   template:
     metadata:
-      labels: #this are pod labels
+      labels: 
         app: catalogue
         tier: app
         project: roboshop
@@ -37,9 +37,9 @@ metadata:
   namespace: roboshop
 spec: 
   selector: 
-      app: catalogue
-      tier: app
-      project: roboshop
+    app: catalogue
+    tier: app
+    project: roboshop
   ports:
   - name: mongodb-port
     protocol: TCP
