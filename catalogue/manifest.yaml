@@ -54,4 +54,4 @@ metadata:
 data: 
   MONGO: "true"
   MONGO_URL: "mongodb://mongodb:27017/catalogue" # protocol//service-name:service-port/schema
-  TRAINER: SIVA
+  
