@@ -165,7 +165,6 @@ kind: Service
 metadata:
   name: web
   namespace: roboshop 
-  
 spec:
   type: LoadBalancer #it only work for cloud k8 clusters
   selector:
