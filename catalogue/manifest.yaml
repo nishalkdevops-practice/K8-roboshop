@@ -1,32 +1,57 @@
-apiVersion: v1
-kind: Pod
-metadata: 
-  name: nginx
-  labels: 
-    environment: dev
-    app: frontend
-spec: 
-  containers: 
-  - name: nginx
-    image: nginx
-    ports: 
-    - containerPort: 80
-      name: http-web-svc
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogue
+  namespace: roboshop
+  labels:  #these are deployment labels
+    app: catalogue
+    tier: app
+    project: roboshop
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalogue
+      tier: app
+      project: roboshop
+  template:
+    metadata:
+      labels: #this are pod labels
+        app: catalogue
+        tier: app
+        project: roboshop
+    spec:
+      containers:
+      - name: catalogue
+        image: nishaldevops/catalogue:1.0.0
+        envFrom: 
+        - configMapRef: 
+          name: catalogue
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata: 
-  name: nginx-service
+  name: catalogue
+  namespace: roboshop
 spec: 
   selector: 
-    environment: dev
-    app: frontend
+      app: catalogue
+      tier: app
+      project: roboshop
   ports:
-  - name: name-of-service-port
+  - name: mongodb-port
     protocol: TCP
-    port: 80  #this is service port 
-    targetPort: http-web-svc #this port belongs to container
-  
-
+    port: 8080  #this is service port 
+    targetPort: 8080 #this port belongs to container
+---
+apiVersion: v1 
+kind: ConfigMap
+metadata: 
+  name: catalogue
+  namespace: roboshop
+data: 
+  MONGO: "true"
+  MONGO_URL: "mongodb://mongodb:27017/catalogue" # protocol//service-name:service-port/schema
+  TRAINER: SIVA
