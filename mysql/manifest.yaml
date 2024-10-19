@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: roboshop
+  labels:  #these are deployment labels
+    app: mysql
+    tier: db
+    project: roboshop
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+      project: roboshop
+      tier: db
+  template:
+    metadata:
+      labels: #this are pod labels
+        app: mysql
+        project: roboshop
+        tier: db
+    spec:
+      containers:
+      - name: mysql
+        image: nishaldevops/mysql:1.0.0
+        envFrom: 
+        - configMapRef: 
+            name: mysql
+
+---
+
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: mysql
+    namespace: roboshop
+  spec:
+    selector:
+      app: mysql
+      tier: db
+      project: roboshop
+    ports:
+    - name: mysql-port
+      protocol: TCP
+      port: 3306 # this port belongs to service
+      targetPort: 3306 # this port belongs to container
+
+---
+
+apiVersion: v1 
+kind: ConfigMap
+metadata: 
+  name: mysql
+  namespace: roboshop
+data: 
+  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+  MYSQL_DATABASE: "cities" # protocol//service-name:service-port/schema
+  MYSQL_USER: "shipping" 
+  MYSQL_PASSWORD: "RoboShop@1"
